@@ -1,19 +1,36 @@
 pipeline {
     agent any
 
-    stages {
+    environment {
+        IMAGE_NAME = "webiste"
+        IMAGE_TAG = "v1"
+    }
 
+    stages {
+        
         stage('checkout') {
             steps {
-                echo 'cloning Github repository...'
-                checkout scm 
+                checkout scm
             }
         }
-        stage('verify') {
-            steps {
-                sh 'pwd'
-                sh 'ls -la'
-            }
+    }
+
+    stage('Verify Workspace') {
+        steps {
+            sh 'pwd'
+            sh 'ls -la'
+        }
+    }
+
+    stage('Build Docker Image') {
+        steps {
+            sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
+        }
+    }
+
+    stage('Verify Docker Image') {
+        steps {
+            sh 'docker images | grep website'
         }
     }
 }
