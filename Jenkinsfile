@@ -57,6 +57,21 @@ pipeline {
             '''
         }
      }
+     stage('Deploy to Kubernetes') {
+        steps {
+            sh ''' 
+            kubectl apply -f kubernetes/deplyment.yaml
+            kubectl apply -f kubernetes/service.yaml
+            '''
+        }
+     }
+     stage('Verify Deployment') {
+        sh '''
+        kubectl get deployments
+        kubectl get pods
+        kubectl get svc
+        '''
+     }
     }
     post {
         success {
