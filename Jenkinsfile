@@ -13,7 +13,7 @@ pipeline {
                 checkout scm
             }
         }
-    }
+    
 
     stage('Verify Workspace') {
         steps {
@@ -32,5 +32,6 @@ pipeline {
         steps {
             sh 'docker images | grep website'
         }
+     }
     }
 }
