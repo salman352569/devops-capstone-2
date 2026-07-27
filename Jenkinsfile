@@ -33,5 +33,37 @@ pipeline {
             sh 'docker images | grep website'
         }
      }
+
+     stage('Verify Docker Login') {
+        steps {
+            withCredentials([
+                usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+
+                )
+            ]){
+                sh ''' 
+                echo "$DOCKER_PASS" | docker login -u "DOCKER_USER" --password-stdin
+                '''
+            }
+        }
+     }
+     stage('Push Docker Image') {
+        steps {
+            sh '''
+            docker push $IMAGE_NAME:IMAGE_TAG
+            '''
+        }
+     }
+    }
+    post {
+        success {
+            echo "Docker Image successfully Pushed"
+        }
+        failed {
+            echo "pipeline Failed"
+        }
     }
 }
