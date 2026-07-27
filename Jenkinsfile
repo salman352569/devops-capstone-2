@@ -34,7 +34,7 @@ pipeline {
         }
      }
 
-     stage('Verify Docker Login') {
+     stage('Docker Login') {
         steps {
             withCredentials([
                 usernamePassword(
@@ -45,7 +45,7 @@ pipeline {
                 )
             ]){
                 sh ''' 
-                echo "$DOCKER_PASS" | docker login -u "DOCKER_USER" --password-stdin
+                echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                 '''
             }
         }
